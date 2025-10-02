@@ -8,6 +8,9 @@ public class Test {
 		System.out.println("Hello Github");
 		
 		System.out.println("Println 2");
+		
+		
+		int x = 5 +3;
 	}
 	
 	
