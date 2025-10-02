@@ -5,7 +5,7 @@ public class Test {
 	
 	public void gitHubTest() {
 		
-		System.out.println("Hello Github");
+		int x = 5 +3;
 	}
 	
 	
