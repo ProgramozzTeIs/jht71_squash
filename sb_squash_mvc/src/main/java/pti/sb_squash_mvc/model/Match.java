@@ -14,13 +14,14 @@ public class Match {
 		super();
 	}
 
-	public Match(int id, int placeId, int user1Id, int user1Points, int user2Id, LocalDate date) {
+	public Match(int id, int placeId, int user1Id, int user1Points, int user2Id, int user2Points, LocalDate date) {
 		super();
 		this.id = id;
 		this.placeId = placeId;
 		this.user1Id = user1Id;
 		this.user1Points = user1Points;
 		this.user2Id = user2Id;
+		this.user2Points = user2Points;
 		this.date = date;
 	}
 
@@ -39,6 +40,9 @@ public class Match {
 	
 	@Column(value="user2_id")
 	private int user2Id;
+	
+	@Column(value="user2_points")
+	private int user2Points;
 	
 	@Column(value="match_date")
 	private LocalDate date;
@@ -81,6 +85,14 @@ public class Match {
 
 	public void setUser2Id(int user2Id) {
 		this.user2Id = user2Id;
+	}
+	
+	public int getUser2Points() {
+		return user2Points;
+	}
+
+	public void setUser2Points(int user2Points) {
+		this.user2Points = user2Points;
 	}
 
 	public LocalDate getDate() {
