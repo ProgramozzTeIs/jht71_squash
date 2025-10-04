@@ -22,6 +22,8 @@ import pti.sb_squash_mvc.dto.UserDto;
 import pti.sb_squash_mvc.model.Match;
 import pti.sb_squash_mvc.model.Place;
 import pti.sb_squash_mvc.model.User;
+import pti.sb_squash_mvc.util.LoginValidator;
+import pti.sb_squash_mvc.util.Roles;
 
 @Service
 public class AppService {
@@ -29,17 +31,57 @@ public class AppService {
 	private MatchRepository matchRepository;
 	private PlaceRepository placeRepository;
 	private UserRepository userRepository;
+	private LoginValidator loginValidator;
 	
 	
 	@Autowired
-	public AppService(MatchRepository matchRepository, PlaceRepository placeRepository, UserRepository userRepository) {
+	public AppService(MatchRepository matchRepository, PlaceRepository placeRepository, UserRepository userRepository,
+			LoginValidator loginValidator) {
 		super();
 		this.matchRepository = matchRepository;
 		this.placeRepository = placeRepository;
 		this.userRepository = userRepository;
+		this.loginValidator = loginValidator;
 	}
 
 
+
+	/**
+	 * Belépés
+	 * 0 --> Nem sikerült bejelentkezni
+	 * 1 --> Első belépés, jelszó változtatás
+	 * 2 --> Sikeres belépés, Játékos
+	 * 3 --> Sikeres belépés, Admin	
+	 */
+	public int doLogin(String name, String password) {
+		
+		int loginResult = 0;
+		
+		User user = userRepository.getUserByName(name);
+		
+		if(user != null && user.getPassword().equals(password)) {
+			
+			if(user.isFirstLogin()) {
+				loginResult = 1;
+			}		
+			else {		
+				user.setLoggedIn(true);
+				userRepository.save(user);		
+							
+				if(user.getRole() == Roles.PLAYER) {
+				loginResult = 2;
+				}		
+				else if(user.getRole() == Roles.ADMIN) {
+					loginResult = 3;
+				}
+			}
+		}
+		
+		return loginResult;
+	}
+	
+
+	
 	
 	public MatchWrapperDto matchWrapperDtoMaker(int loggedInUserId, Integer selectedPlaceId ,Integer selectedUserId) {
 			
@@ -142,7 +184,7 @@ public class AppService {
 		
 	
 
-	
+
 	private Set<UserDto> getAllUserFromRepo()
 	{
 		Set<UserDto> userDtoSet = new HashSet<>();
