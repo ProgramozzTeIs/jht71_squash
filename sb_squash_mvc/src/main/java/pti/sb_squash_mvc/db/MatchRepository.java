@@ -13,6 +13,13 @@ import pti.sb_squash_mvc.model.Match;
 public interface MatchRepository extends CrudRepository<Match, Integer>{
 
 	@Query("SELECT * FROM matches WHERE place_id = :placeId")
-	List<Match> getMatchesListByPlace(@Param("placeId") int placeId);
+	List<Match> getMatchesListByPlace(@Param("placeId") Integer placeId);
+	
+	
+	@Query("SELECT * FROM matches WHERE user1_id = :userId OR user2_id = :userId")
+	public List<Match> getMatchesListByUserId(@Param("userId")Integer userId);
+
+
+	
 	
 }

@@ -1,9 +1,12 @@
 package pti.sb_squash_mvc.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import pti.sb_squash_mvc.dto.MatchWrapperDto;
@@ -23,6 +26,12 @@ public class AppController {
 		super();
 		this.service = service;
 		this.loginValidator = loginValidator;
+	}
+	
+	@GetMapping("/")
+	public String loadLoginPage() {
+			
+		return "login.html";	
 	}
 
 
@@ -52,4 +61,48 @@ public class AppController {
 		return html;
 		
 	}
+	
+	@PostMapping("/admin/save/match")
+	public String saveNewMatch(
+			Model model,
+			@RequestParam("placeId") int placeId,
+			@RequestParam("user1Id") int user1Id,
+			@RequestParam("user1Points") int user1Points,
+			@RequestParam("user2Id") int user2Id,
+			@RequestParam("user2Points") int user2Points,
+			@RequestParam("date") LocalDate date,
+			@RequestParam("adminId") int adminId
+			){
+		
+		
+		String resultHtml = "admin.html";
+		
+		if(loginValidator.isUserLoggedIn(adminId) == Roles.ADMIN) {
+			
+			resultHtml = "admin.html";
+			
+			 int code = service.saveNewMatch(
+					 placeId,
+					 user1Id,
+					 user1Points,
+					 user2Id,
+					 user2Points,
+					 date);
+			 
+			 AdminDto adminDto = service.getAdminDto(code ,adminId);
+			 model.addAttribute("adminDto" ,adminDto);
+			 
+		}
+			
+		else{
+			
+			resultHtml = "login.html";
+			
+			 }
+		
+		return resultHtml;
+		
+	}
+	
+	
 }

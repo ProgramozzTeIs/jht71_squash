@@ -1,5 +1,6 @@
 package pti.sb_squash_mvc.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pti.sb_squash_mvc.controller.AdminDto;
+import pti.sb_squash_mvc.controller.ErroDto;
 import pti.sb_squash_mvc.db.MatchRepository;
 import pti.sb_squash_mvc.db.PlaceRepository;
 import pti.sb_squash_mvc.db.UserRepository;
@@ -37,67 +40,108 @@ public class AppService {
 	}
 
 
-	public MatchWrapperDto matchWrapperDtoMaker(int loggedInUserId, int selectedPlaceId) {
-		
-		MatchWrapperDto matchWrapperDto = null;
-		List<MatchDto> matchDtoList = new ArrayList<>();
-		
-		if (selectedPlaceId != 0)
-		{
-			List<Match> matchList = matchRepository.getMatchesListByPlace(selectedPlaceId);
+	
+	public MatchWrapperDto matchWrapperDtoMaker(int loggedInUserId, Integer selectedPlaceId ,Integer selectedUserId) {
 			
-			for(Match match : matchList)
+			MatchWrapperDto matchWrapperDto = null;
+			List<MatchDto> matchDtoList = new ArrayList<>();
+			List<Match> matchList = new ArrayList<>();
+			
+			//1
+			if (selectedPlaceId != null && selectedUserId == null)
 			{
-				/** GET PLACE DATA FROM REPO BY ID */
-				Optional<Place> placeOpt = placeRepository.findById(match.getPlaceId());
-				Place place = placeOpt.get();
-					/** CREATE PLACEDTO */
-					PlaceDto placeDto = new PlaceDto(
-													place.getId(),
-													place.getName(),
-													place.getAddress(),
-													place.getRentFee());
-					
-				/** GET USER1 DATA FROM REPO BY ID */
-				Optional<User> user1Opt = userRepository.findById(match.getUser1Id());
-				User user1 = user1Opt.get();
-					/** CREATE USERDTO */
-					UserDto user1Dto = new UserDto(
-													user1.getId(),
-													user1.getName());
+				matchList = matchRepository.getMatchesListByPlace(selectedPlaceId);
+			}	
+			//2
+			else if(selectedPlaceId == null && selectedUserId != null)
+			{
+				matchList = matchRepository.getMatchesListByUserId(selectedUserId);
+			}	
+			//3
+			else if(selectedPlaceId == null && selectedUserId == null)
+			{
+				Iterable<Match> matchIterable = matchRepository.findAll();
+				for(Match match : matchIterable) {
+					matchList.add(match);
+				}		
+			}
+			//4
+			/*Ha minden a két értéket megadják a frontendről akkor bejárjuk mind  két kapott listát a repositoryból,
+			 * és összevonjuk őket egy listába ismétlések nélkűl.
+			 */
+			if (selectedPlaceId != null && selectedUserId != null) {
 				
-				/** GET USER2 DATA FROM REPO BY ID */
-				Optional<User> user2Opt = userRepository.findById(match.getUser2Id());
-				User user2 = user2Opt.get();
-					/** CREATE USERDTO */
-					UserDto user2Dto = new UserDto(
-													user2.getId(),
-													user2.getName());
+				matchList = matchRepository.getMatchesListByPlace(selectedPlaceId);
 				
-				/** CREATE MATCHDTO */
-				MatchDto matchDto = new MatchDto(
-												match.getDate(),
-												placeDto,
-												user1Dto,
-												match.getUser1Points(),
-												user2Dto,
-												match.getUser2Points());
+				List<Match> matchListByUserId = matchRepository.getMatchesListByUserId(selectedUserId);
 				
-				matchDtoList.add(matchDto);
+				for(Match matchFromPlaceId : matchList) {
+					for(Match matchFromUserId :matchListByUserId) {
+						
+						if(matchFromPlaceId.getId() != matchFromUserId.getId()) {
+							matchList.add(matchFromUserId);
+						}
+					}
+				}
+						
 			}
 			
-			matchWrapperDto = new MatchWrapperDto(
-													matchDtoList,
-													getAllUserFromRepo(),
-													getAllPlaceFromRepo(),
-													loggedInUserId
-													);
+
+				for(Match match : matchList)
+				{
+					/** GET PLACE DATA FROM REPO BY ID */
+					Optional<Place> placeOpt = placeRepository.findById(match.getPlaceId());
+					Place place = placeOpt.get();
+						/** CREATE PLACEDTO */
+						PlaceDto placeDto = new PlaceDto(
+														place.getId(),
+														place.getName(),
+														place.getAddress(),
+														place.getRentFee());
+						
+					/** GET USER1 DATA FROM REPO BY ID */
+					Optional<User> user1Opt = userRepository.findById(match.getUser1Id());
+					User user1 = user1Opt.get();
+						/** CREATE USERDTO */
+						UserDto user1Dto = new UserDto(
+														user1.getId(),
+														user1.getName());
+					
+					/** GET USER2 DATA FROM REPO BY ID */
+					Optional<User> user2Opt = userRepository.findById(match.getUser2Id());
+					User user2 = user2Opt.get();
+						/** CREATE USERDTO */
+						UserDto user2Dto = new UserDto(
+														user2.getId(),
+														user2.getName());
+					
+					/** CREATE MATCHDTO */
+					MatchDto matchDto = new MatchDto(
+													match.getDate(),
+													placeDto,
+													user1Dto,
+													match.getUser1Points(),
+													user2Dto,
+													match.getUser2Points());
+					
+					matchDtoList.add(matchDto);
+				}
+				
+				matchWrapperDto = new MatchWrapperDto(
+														matchDtoList,
+														getAllUserFromRepo(),
+														getAllPlaceFromRepo(),
+														loggedInUserId
+														);
+				
+				
 			
 			
+			return matchWrapperDto;
 		}
 		
-		return matchWrapperDto;
-	}
+	
+
 	
 	private Set<UserDto> getAllUserFromRepo()
 	{
@@ -136,6 +180,23 @@ public class AppService {
 		
 		return placeDtoList;
 	}
+
+
+	public int saveNewMatch(int placeId, int user1Id, int user1Points, int user2Id, int user2Points,
+			LocalDate date) {
+		
+		int result = 0;
+	
+		return result;
+	}
+
+	public AdminDto getAdminDto(int code ,int adminId) {
+		
+		AdminDto result = null;
+		
+		return result;
+	}
+
 	
 	
 }
