@@ -60,7 +60,11 @@ public class AppController {
 		}
 		else if(loginResult == 2)
 		{
-			/** Gyöngyi matches.html*/
+			MatchWrapperDto matchWrapperDto = service.loginPlayer(name,password);
+			
+			model.addAttribute("matchWrapperDto", matchWrapperDto);
+			resultHtml = "/matches.html";
+
 		}
 		else if(loginResult == 3)
 		{			

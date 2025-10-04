@@ -299,6 +299,75 @@ public class AppService {
 		
 		return adminDto;
 	}
+
+
+
+	public MatchWrapperDto loginPlayer(String name, String password) {
+		
+		MatchWrapperDto matchWrapperDto = null;
+		
+		Optional <User> userOpt = userRepository.userLoggedIn(1, name, password);
+		User user = userOpt.get();
+		
+		List<MatchDto> matchDtoList = new ArrayList<>();
+				
+		Iterable<Match> matchList = matchRepository.findAll();
+		
+		for (Match match : matchList) {
+			
+			// PlaceDto	
+			Optional<Place> placeOpt = placeRepository.findById(match.getPlaceId());
+			Place place = placeOpt.get();
+
+			PlaceDto placeDto = new PlaceDto(
+								place.getId(),
+								place.getName(),
+								place.getAddress(),
+								place.getRentFee()
+								);
+				
+			// User1
+			Optional<User> user1Opt = userRepository.findById(match.getUser1Id());
+			User user1 = user1Opt.get();
+				
+			UserDto user1Dto = new UserDto(
+								user1.getId(),
+								user1.getName()
+								);
+			
+			// User2
+			Optional<User> user2Opt = userRepository.findById(match.getUser2Id());
+			User user2 = user2Opt.get();
+			
+			UserDto user2Dto = new UserDto(
+								user2.getId(),
+								user2.getName()
+								);
+			
+			//MatchDto
+			MatchDto matchDto = new MatchDto(
+											match.getDate(),
+											placeDto,
+											user1Dto,
+											match.getUser1Points(),
+											user2Dto,
+											match.getUser2Points());
+			
+			matchDtoList.add(matchDto);
+			
+		}
+		
+		matchWrapperDto = new MatchWrapperDto(
+					matchDtoList,
+					getAllUserFromRepo(),
+					getAllPlaceFromRepo(),
+					1
+					);
+		
+				
+		return matchWrapperDto;
+
+	}
 	
 	
 }
