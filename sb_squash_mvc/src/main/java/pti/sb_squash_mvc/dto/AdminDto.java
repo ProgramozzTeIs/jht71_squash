@@ -5,12 +5,12 @@ import java.util.Set;
 public class AdminDto {
 
 	private Set<UserDto> users;
-	private Set<PalceDto> places;
+	private Set<PlaceDto> places;
 	private int loggedInAdminId;
 	private int code;
 	
 	
-	public AdminDto(Set<UserDto> users, Set<PalceDto> places, int loggedInAdminId, int code) {
+	public AdminDto(Set<UserDto> users, Set<PlaceDto> places, int loggedInAdminId, int code) {
 		super();
 		this.users = users;
 		this.places = places;
@@ -26,11 +26,11 @@ public class AdminDto {
 	public void setUsers(Set<UserDto> users) {
 		this.users = users;
 	}
-	public Set<PalceDto> getPlaces() {
+	public Set<PlaceDto> getPlaces() {
 		return places;
 	}
 	
-	public void setPlaces(Set<PalceDto> places) {
+	public void setPlaces(Set<PlaceDto> places) {
 		this.places = places;
 	}
 	
