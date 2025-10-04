@@ -44,7 +44,7 @@ public class AppController {
 				@RequestParam("loggedinuserid") Integer loggedInUserId,
 				@RequestParam("selectedplaceid") Integer selectedPlaceId) {
 		
-		String html = "";
+		String resultHtml = "";
 		
 		Roles role = loginValidator.isUserLoggedIn(loggedInUserId);
 		
@@ -52,7 +52,7 @@ public class AppController {
 		{
 			MatchWrapperDto matchWrapperDto = this.service.matchWrapperDtoMaker(0, selectedPlaceId, selectedPlaceId);
 			model.addAttribute("matchWrapperDto", matchWrapperDto);
-			html = "matches.html";
+			resultHtml = "matches.html";
 		}
 		else
 		{
@@ -60,7 +60,7 @@ public class AppController {
 		}
 
 		
-		return html;
+		return resultHtml;
 		
 	}
 	
@@ -112,33 +112,33 @@ public class AppController {
 	@PostMapping("/admin/save/place")
 	public String savePlaceInRepo(
 					Model model,
-					@RequestParam("adminid") int adminId,
-					@RequestParam("name") String name,
+					@RequestParam("adminId") int adminId,
+					@RequestParam("placename") String placeName,
 					@RequestParam("address") String address,
 					@RequestParam("rentfeehuf") int rentFeeHuf 
 					)
 	{
-		String html = "";
+		String resultHtml = "";
 		
 		Roles role = loginValidator.isUserLoggedIn(adminId);
 		
 		if(role.equals(Roles.ADMIN))
 		{
-			AdminDto adminDto = this.service.savePlaceInRepo(adminId, name, address, rentFeeHuf);
+			AdminDto adminDto = this.service.savePlaceInRepo(adminId, placeName, address, rentFeeHuf);
 			
 			model.addAttribute("adminDto", adminDto);
-			html = "admin.html";
+			resultHtml = "admin.html";
 		}
 		else
 		{
 			ErrorDto errorDto = new ErrorDto(1);
 			
 			model.addAttribute("errorDto", errorDto);
-			html = "login.html";
+			resultHtml = "login.html";
 		}
 
 		
-		return html;
+		return resultHtml;
 	}
 	
 	@GetMapping("/admin")

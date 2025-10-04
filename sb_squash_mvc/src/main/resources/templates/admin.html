@@ -6,7 +6,33 @@
 </head>
 	<body>
 		
-		<h2>Save new user</h2>
+		<h2>Create a new place</h2>
+		
+		<form action="/admin/save/place" method="post">
+		
+			<label type="text">Place name</label>
+			<input type="text" value="placename" name="placename"></input><br></br>
+			<label type="text">Address of place</label>
+ 			<input type="text" value="address" name="address"></input><br></br>
+ 			<label type="text">Rent fee in HUF</label>
+ 			<input type="number" value="0" name="rentfeehuf"></input><br></br>
+ 			<!-- Send admin id -->
+ 			<input type="hidden" th:value="${adminDto.getLoggedInAdminId()}" name="adminId"></input>
+			<input type="submit" value="Create place"></input>
+		
+		
+		<!-- Repo save succeeded text -->
+		<div th:if="${adminDto != null}">
+			<h2 th:if="${adminDto.getCode()==1}" style="color:MediumSeaGreen;">Place has been saved to repo</h2>
+			<h2 th:if="${adminDto.getCode()==2}" style="color:Tomato;">Place has NOT been saved to repo</h2>
+		</div>
+		<!-- Error text -->
+		
+		</form>
+		
+		<br></br>
+		
+		<h2>Save new match</h2>
 		
 		<form action ="/admin/save/match" method ="post">
 			
@@ -44,12 +70,11 @@
 				<input type="date" name="date">
 				
 				<!-- Send admin id -->
-				<input type="hidden" name="adminId" value="adminDto.getLoggedInAdminId()">
+				<input type="hidden" name="adminId" th:value="${adminDto.getLoggedInAdminId()}">
+			<br></br>
+			<input type="submit" value="Create match"></input>
 				
-			
-					
 		</form>
-	
 	
 	</body>
 </html>
