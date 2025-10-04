@@ -4,7 +4,52 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<body>
-
-</body>
+	<body>
+		
+		<h2>Save new user</h2>
+		
+		<form action ="/admin/save/match" method ="post">
+			
+			<h3>Place name </h3>
+			
+			<select name ="placeId" > </select>		
+				<option th:each="place : ${adminDto.getPlaces()}"
+						th:value="${place.getId()}"
+						th:text="${$place.getName()}">
+			
+			<h3>First player name </h3>
+			
+			<select name="user1Id"> </select>			
+				<option th:each="user1 : ${adminDto.getUsers()}"
+						th:value="${user1.getId()}"
+						th:text="${user1.getName()}">
+			
+			<h3>First player points </h3>
+				
+				<input type="number" name="user1Points">
+							
+			<h3>Second player name </h3>
+			
+			<select name="user2Id"> </select>			
+				<option th:each="user2 : ${adminDto.getUsers()}"
+						th:value="${user2.getId()}"
+						th:text="${user2.getName()}">
+			
+			<h3>Second player points </h3>
+				
+				<input type="number" name="user2Points">
+							
+			<h4> Date </h4>
+				
+				<input type="date" name="date">
+				
+				<!-- Send admin id -->
+				<input type="hidden" name="adminId" value="adminDto.getLoggedInAdminId()">
+				
+			
+					
+		</form>
+	
+	
+	</body>
 </html>
