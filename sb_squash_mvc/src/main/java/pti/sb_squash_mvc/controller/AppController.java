@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pti.sb_squash_mvc.dto.AdminDto;
+import pti.sb_squash_mvc.dto.ErrorDto;
 import pti.sb_squash_mvc.dto.MatchWrapperDto;
 import pti.sb_squash_mvc.service.AppService;
 import pti.sb_squash_mvc.util.LoginValidator;
@@ -35,12 +37,12 @@ public class AppController {
 	}
 
 
-	
+	//GET::localhost:8080/matches/filter/place?loggedinuserid=X&selectedplaceid=Y
 	@GetMapping("/matches/filter/place")
 	public String filterMatchesListByPlace(
 				Model model,
-				@RequestParam("loggedinuserid") int loggedInUserId,
-				@RequestParam("selectedplaceid") int selectedPlaceId) {
+				@RequestParam("loggedinuserid") Integer loggedInUserId,
+				@RequestParam("selectedplaceid") Integer selectedPlaceId) {
 		
 		String html = "";
 		
@@ -48,7 +50,7 @@ public class AppController {
 		
 		if(role != Roles.UNKNOWN)
 		{
-			MatchWrapperDto matchWrapperDto = this.service.matchWrapperDtoMaker(loggedInUserId, selectedPlaceId);
+			MatchWrapperDto matchWrapperDto = this.service.matchWrapperDtoMaker(0, selectedPlaceId, selectedPlaceId);
 			model.addAttribute("matchWrapperDto", matchWrapperDto);
 			html = "matches.html";
 		}
@@ -105,4 +107,49 @@ public class AppController {
 	}
 	
 	
+
+	//POST::localhost:8080/matches/filter/place?adminid=X&name=Y&address=Z&rentfeehuf=XYZ
+	@PostMapping("/admin/save/place")
+	public String savePlaceInRepo(
+					Model model,
+					@RequestParam("adminid") int adminId,
+					@RequestParam("name") String name,
+					@RequestParam("address") String address,
+					@RequestParam("rentfeehuf") int rentFeeHuf 
+					)
+	{
+		String html = "";
+		
+		Roles role = loginValidator.isUserLoggedIn(adminId);
+		
+		if(role.equals(Roles.ADMIN))
+		{
+			AdminDto adminDto = this.service.savePlaceInRepo(adminId, name, address, rentFeeHuf);
+			
+			model.addAttribute("adminDto", adminDto);
+			html = "admin.html";
+		}
+		else
+		{
+			ErrorDto errorDto = new ErrorDto(1);
+			
+			model.addAttribute("errorDto", errorDto);
+			html = "login.html";
+		}
+
+		
+		return html;
+	}
+	
+	@GetMapping("/admin")
+	public String admin(
+				Model model,
+				@RequestParam("adminid") int adminId)
+	{
+		AdminDto adminDto = this.service.loadAdminPage(adminId);
+		model.addAttribute("adminDto", adminDto);
+		
+		return "admin.html";
+	}
+
 }

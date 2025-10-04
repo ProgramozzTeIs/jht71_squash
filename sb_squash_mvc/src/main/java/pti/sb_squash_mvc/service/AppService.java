@@ -10,11 +10,10 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import pti.sb_squash_mvc.controller.AdminDto;
-import pti.sb_squash_mvc.controller.ErroDto;
 import pti.sb_squash_mvc.db.MatchRepository;
 import pti.sb_squash_mvc.db.PlaceRepository;
 import pti.sb_squash_mvc.db.UserRepository;
+import pti.sb_squash_mvc.dto.AdminDto;
 import pti.sb_squash_mvc.dto.MatchDto;
 import pti.sb_squash_mvc.dto.MatchWrapperDto;
 import pti.sb_squash_mvc.dto.PlaceDto;
@@ -239,6 +238,55 @@ public class AppService {
 		return result;
 	}
 
+
+	public AdminDto savePlaceInRepo(int adminId, String name, String address, int rentFeeHuf) {
+		
+		AdminDto adminDto = null;
+		
+		Place place = new Place(
+								0,
+								name,
+								address,
+								rentFeeHuf);
+		
+		Place savedPlace = this.placeRepository.save(place);
+		
+		if(savedPlace != null)
+		{
+			adminDto = new AdminDto(
+									getAllUserFromRepo(),
+									getAllPlaceFromRepo(),
+									adminId,
+									1 //saving was OK
+									);
+		}
+		else
+		{
+			adminDto = new AdminDto(
+									getAllUserFromRepo(),
+									getAllPlaceFromRepo(),
+									adminId,
+									2 //saving was not OK
+									);
+		}
+		
+		return adminDto;
+	}
+
+
+	public AdminDto loadAdminPage(int adminId) {
+		
+		AdminDto adminDto = null;
+		
+		adminDto = new AdminDto(
+								getAllUserFromRepo(),
+								getAllPlaceFromRepo(),
+								adminId,
+								0
+								);
+		
+		return adminDto;
+	}
 	
 	
 }
