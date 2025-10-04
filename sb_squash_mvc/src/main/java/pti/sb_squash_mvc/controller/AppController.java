@@ -35,7 +35,44 @@ public class AppController {
 			
 		return "login.html";	
 	}
-
+	
+	//POST::localhost:8080/login?name=Y&password=Z
+	@PostMapping("/login")
+	public String doLogin(
+				Model model,
+				@RequestParam("name") String name,
+				@RequestParam("password") String password)
+	{
+		
+		String resultHtml = "";
+		
+		int loginResult = this.service.doLogin(name, password);
+		
+		if(loginResult == 0)
+		{
+			ErrorDto errorDto = new ErrorDto(0);
+			model.addAttribute("errorDto", errorDto);
+			resultHtml = "login.html";
+		}
+		else if(loginResult == 1)
+		{
+			/** Andi changepwd.html*/
+		}
+		else if(loginResult == 2)
+		{
+			/** Gyöngyi matches.html*/
+		}
+		else if(loginResult == 3)
+		{			
+			int adminId = this.service.getUserId(name, password);
+			AdminDto adminDto = this.service.loadAdminPage(adminId);
+		
+			model.addAttribute("adminDto", adminDto);
+			resultHtml = "admin.html";
+		}
+		
+		return resultHtml;
+	}
 
 	//GET::localhost:8080/matches/filter/place?loggedinuserid=X&selectedplaceid=Y
 	@GetMapping("/matches/filter/place")
@@ -146,10 +183,28 @@ public class AppController {
 				Model model,
 				@RequestParam("adminid") int adminId)
 	{
-		AdminDto adminDto = this.service.loadAdminPage(adminId);
-		model.addAttribute("adminDto", adminDto);
+
+		String resultHtml = "";
 		
-		return "admin.html";
+		Roles role = loginValidator.isUserLoggedIn(adminId);
+		
+		if(role.equals(Roles.ADMIN))
+		{
+			AdminDto adminDto = this.service.loadAdminPage(adminId);
+			
+			model.addAttribute("adminDto", adminDto);
+			resultHtml = "admin.html";
+		}
+		else
+		{
+			ErrorDto errorDto = new ErrorDto(1);
+			
+			model.addAttribute("errorDto", errorDto);
+			resultHtml = "login.html";
+		}
+
+		
+		return resultHtml;
 	}
 
 }

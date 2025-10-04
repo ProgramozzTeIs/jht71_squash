@@ -80,7 +80,19 @@ public class AppService {
 	}
 	
 
-	
+	public int getUserId(String name, String password)
+	{
+		int result = 0;
+		
+		User user = userRepository.getUserByName(name);
+		
+		if(user != null && user.getPassword().equals(password))
+		{
+			result = user.getId();
+		}
+			
+		return result;
+	}
 	
 	public MatchWrapperDto matchWrapperDtoMaker(int loggedInUserId, Integer selectedPlaceId ,Integer selectedUserId) {
 			
