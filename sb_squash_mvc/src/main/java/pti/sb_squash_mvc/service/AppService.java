@@ -372,4 +372,45 @@ public class AppService {
 	}
 	
 	
+	
+public UserDto getUserDto(String name) {
+		
+		UserDto userDto = null;
+		
+		User user = userRepository.getUserByName(name);
+		
+	    if (user != null) {
+	        userDto = new UserDto(
+	        		user.getId(), 
+	        		user.getName());
+	    }
+		return userDto;
+	}
+
+
+
+	public UserDto changePassword(int userId, String newPassword, String confirmPassword) {
+		
+		UserDto userDto = null;		
+		Optional<User> userOpt = userRepository.findById(userId);
+
+	    if (userOpt.isEmpty() == false) {
+	        User user = userOpt.get();
+
+	        if (newPassword.equals(confirmPassword)) {
+	            user.setPassword(confirmPassword);
+	            user.setFirstLogin(false);
+	            user.setLoggedIn(true);
+	            userRepository.save(user);
+
+	            userDto = new UserDto(
+	            		user.getId(), 
+	            		user.getName());
+	        }
+	    }	
+		return userDto;
+	}
+
+	
+	
 }
