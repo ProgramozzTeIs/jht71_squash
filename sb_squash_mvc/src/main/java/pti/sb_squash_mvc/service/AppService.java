@@ -335,10 +335,9 @@ public class AppService {
 		
 		MatchWrapperDto matchWrapperDto = null;
 		
-		Integer userId = userRepository.userLoggedIn(1, name, password);
-		Optional<User> userOpt = this.userRepository.findById(userId);
-		
-		User user = userOpt.get();
+		this.userRepository.userLoggedIn(1, name, password);
+			
+		User user = this.userRepository.getUserByName(name);
 
 		List<MatchDto> matchDtoList = new ArrayList<>();
 				
@@ -498,16 +497,18 @@ public class AppService {
 		if (userOpt.isPresent()) {
 		       
 			User user = userOpt.get();
-		       
+			
 		    if (user.isLoggedIn()) {
 		    	user.setLoggedIn(false);
 		        userRepository.save(user);
 		        errorDto = new ErrorDto(2);
 		    }
+		    else
+		    {
+			    errorDto = new ErrorDto(1); 
+		    }
 		}
 
-	    errorDto = new ErrorDto(1); 
-		
 		return errorDto;
 	}
 
