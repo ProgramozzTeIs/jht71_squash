@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import pti.sb_squash_mvc.dto.AdminDto;
-import pti.sb_squash_mvc.dto.ErrorDto;
 import pti.sb_squash_mvc.dto.MatchWrapperDto;
-import pti.sb_squash_mvc.dto.UserDto;
 import pti.sb_squash_mvc.service.AppService;
 import pti.sb_squash_mvc.util.LoginValidator;
 import pti.sb_squash_mvc.util.Roles;
@@ -36,81 +34,54 @@ public class AppController {
 			
 		return "login.html";	
 	}
-	
-	//POST::localhost:8080/login?name=Y&password=Z
-	@PostMapping("/login")
-	public String doLogin(
-				Model model,
-				@RequestParam("name") String name,
-				@RequestParam("password") String password)
-	{
-		
-		String resultHtml = "";
-		
-		int loginResult = this.service.doLogin(name, password);
-		
-		if(loginResult == 0)
-		{
-			ErrorDto errorDto = new ErrorDto(0);
-			model.addAttribute("errorDto", errorDto);
-			resultHtml = "login.html";
-		}
-		
-		else if(loginResult == 1)
-		{
-			UserDto userDto = service.getUserDto(name);	
-			model.addAttribute("userDto", userDto);
-			
-			resultHtml = "changepwd.html";
 
-		}
-		
-		else if(loginResult == 2)
-		{
-			MatchWrapperDto matchWrapperDto = service.loginPlayer(name,password);
+	@GetMapping("/matches/filter/user")
+	public String filterMatchesByUser(
+			Model model,
+			@RequestParam("userId") int loggedInUserId,
+			@RequestParam("selectedUserId") int selectedUserId) {
 			
+		
+		String html = "";
+		Roles role = loginValidator.isUserLoggedIn(loggedInUserId);
+		
+		if(role == Roles.ADMIN)
+		{
+			MatchWrapperDto matchWrapperDto = this.service.matchWrapperDtoMaker(loggedInUserId, null, selectedUserId);
 			model.addAttribute("matchWrapperDto", matchWrapperDto);
-			resultHtml = "matches.html";
-
+			html = "matches.html";
 		}
-		else if(loginResult == 3)
-		{			
-			int adminId = this.service.getUserId(name, password);
-			AdminDto adminDto = this.service.loadAdminPage(adminId);
-		
-			model.addAttribute("adminDto", adminDto);
-			resultHtml = "admin.html";
+		else
+		{
+			// GYÖNGYI  RÉSZE 
 		}
 		
-		return resultHtml;
+		return html;
 	}
-
-	//GET::localhost:8080/matches/filter/place?loggedinuserid=X&selectedplaceid=Y
+	
 	@GetMapping("/matches/filter/place")
 	public String filterMatchesListByPlace(
 				Model model,
-				@RequestParam("loggedinuserid") Integer loggedInUserId,
-				@RequestParam("selectedplaceid") Integer selectedPlaceId) {
+				@RequestParam("loggedinuserid") int loggedInUserId,
+				@RequestParam("selectedplaceid") int selectedPlaceId) {
 		
-		String resultHtml = "";
+		String html = "";
 		
 		Roles role = loginValidator.isUserLoggedIn(loggedInUserId);
 		
 		if(role != Roles.UNKNOWN)
 		{
-			MatchWrapperDto matchWrapperDto = this.service.matchWrapperDtoMaker(0, selectedPlaceId, selectedPlaceId);
+			MatchWrapperDto matchWrapperDto = this.service.matchWrapperDtoMaker(loggedInUserId, selectedPlaceId, null);
 			model.addAttribute("matchWrapperDto", matchWrapperDto);
-			resultHtml = "matches.html";
+			html = "matches.html";
 		}
 		else
 		{
-			ErrorDto errorDto = new ErrorDto(0);
-			model.addAttribute("errorDto", errorDto);
-			resultHtml = "login.html";
+			/** GYÖNGYI EZ ITT A TE RÉSZED */
 		}
 
 		
-		return resultHtml;
+		return html;
 		
 	}
 	
@@ -157,91 +128,4 @@ public class AppController {
 	}
 	
 	
-
-	//POST::localhost:8080/matches/filter/place?adminid=X&name=Y&address=Z&rentfeehuf=XYZ
-	@PostMapping("/admin/save/place")
-	public String savePlaceInRepo(
-					Model model,
-					@RequestParam("adminId") int adminId,
-					@RequestParam("placename") String placeName,
-					@RequestParam("address") String address,
-					@RequestParam("rentfeehuf") int rentFeeHuf 
-					)
-	{
-		String resultHtml = "";
-		
-		Roles role = loginValidator.isUserLoggedIn(adminId);
-		
-		if(role.equals(Roles.ADMIN))
-		{
-			AdminDto adminDto = this.service.savePlaceInRepo(adminId, placeName, address, rentFeeHuf);
-			
-			model.addAttribute("adminDto", adminDto);
-			resultHtml = "admin.html";
-		}
-		else
-		{
-			ErrorDto errorDto = new ErrorDto(1);
-			
-			model.addAttribute("errorDto", errorDto);
-			resultHtml = "login.html";
-		}
-
-		
-		return resultHtml;
-	}
-	
-	@GetMapping("/admin")
-	public String admin(
-				Model model,
-				@RequestParam("adminid") int adminId)
-	{
-
-		String resultHtml = "";
-		
-		Roles role = loginValidator.isUserLoggedIn(adminId);
-		
-		if(role.equals(Roles.ADMIN))
-		{
-			AdminDto adminDto = this.service.loadAdminPage(adminId);
-			
-			model.addAttribute("adminDto", adminDto);
-			resultHtml = "admin.html";
-		}
-		else
-		{
-			ErrorDto errorDto = new ErrorDto(1);
-			
-			model.addAttribute("errorDto", errorDto);
-			resultHtml = "login.html";
-		}
-
-		
-		return resultHtml;
-	}
-
-	
-	
-	@PostMapping("/changepwd")
-	public String changePassword(
-				Model model,
-				@RequestParam("userId") int userId,
-				@RequestParam("newPassword") String newPassword,
-				@RequestParam("confirmPassword") String confirmPassword){
-			
-		String nextPage = "";
-		
-		UserDto userDto = service.changePassword(userId, newPassword, confirmPassword);
-		model.addAttribute("userDto", userDto);
-					
-		if(userDto == null) {		
-			nextPage = "changepwd.html";
-		}
-		else {
-			nextPage = "redirect:/matches";
-		}
-		
-		return nextPage;
-	}
-
 }
