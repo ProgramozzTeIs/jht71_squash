@@ -92,14 +92,14 @@ public class AppController {
 	@GetMapping("/matches/filter/user")
 	public String filterMatchesByUser(
 			Model model,
-			@RequestParam("userId") int loggedInUserId,
+			@RequestParam("loggedinuserid") int loggedInUserId,
 			@RequestParam("selectedUserId") int selectedUserId) {
 			
 		
 		String html = "";
 		Roles role = loginValidator.isUserLoggedIn(loggedInUserId);
 		
-		if(role == Roles.ADMIN)
+		if(role != Roles.UNKNOWN)
 		{
 			MatchWrapperDto matchWrapperDto = this.service.matchWrapperDtoMaker(loggedInUserId, null, selectedUserId);
 			model.addAttribute("matchWrapperDto", matchWrapperDto);
@@ -107,7 +107,7 @@ public class AppController {
 		}
 		else
 		{
-			ErrorDto errorDto = new ErrorDto(0);
+			ErrorDto errorDto = new ErrorDto(1);
 			model.addAttribute("errorDto", errorDto);
 			html = "login.html"; 
 		}
@@ -128,13 +128,13 @@ public class AppController {
 			
 			if(role != Roles.UNKNOWN)
 			{
-				MatchWrapperDto matchWrapperDto = this.service.matchWrapperDtoMaker(0, selectedPlaceId, selectedPlaceId);
+				MatchWrapperDto matchWrapperDto = this.service.matchWrapperDtoMaker(loggedInUserId, selectedPlaceId, null);
 				model.addAttribute("matchWrapperDto", matchWrapperDto);
 				resultHtml = "matches.html";
 			}
 			else
 			{
-				ErrorDto errorDto = new ErrorDto(0);
+				ErrorDto errorDto = new ErrorDto(1);
 				model.addAttribute("errorDto", errorDto);
 				resultHtml = "login.html";
 			}
@@ -267,7 +267,9 @@ public class AppController {
 				nextPage = "changepwd.html";
 			}
 			else {
-				nextPage = "redirect:/matches";
+				MatchWrapperDto matchWrapperDto = this.service.matchWrapperDtoMaker(userId, null, null);
+				model.addAttribute("matchWrapperDto", matchWrapperDto);
+				nextPage = "matches.html";
 			}
 			
 			return nextPage;
