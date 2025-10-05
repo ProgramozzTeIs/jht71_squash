@@ -104,7 +104,9 @@ public class AppController {
 		}
 		else
 		{
-			// GYÖNGYI  RÉSZE 
+			ErrorDto errorDto = new ErrorDto(0);
+			model.addAttribute("errorDto", errorDto);
+			html = "login.html"; 
 		}
 		
 		return html;
