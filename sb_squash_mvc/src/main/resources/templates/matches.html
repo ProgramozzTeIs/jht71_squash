@@ -79,5 +79,9 @@
 		
 		<input type="hidden" name="userId" th:value="${matchWrappeDto.getLoggedInUserId()}">
 	</form>
+	
+	<div th:if="${errorDto != null}">
+		<h2 th:if="${errorDto.getCode() == 0}" style="color:Tomato;">Nem belépett felhasználó, próbáld újra</h2>
+	</div>
 </body>
 </html>

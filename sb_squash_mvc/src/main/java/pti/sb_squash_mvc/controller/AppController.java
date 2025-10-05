@@ -104,7 +104,9 @@ public class AppController {
 		}
 		else
 		{
-			/** GYÖNGYI EZ ITT A TE RÉSZED */
+			ErrorDto errorDto = new ErrorDto(0);
+			model.addAttribute("errorDto", errorDto);
+			resultHtml = "login.html";
 		}
 
 		
