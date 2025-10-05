@@ -12,11 +12,13 @@ import pti.sb_squash_mvc.model.Match;
 @Repository
 public interface MatchRepository extends CrudRepository<Match, Integer>{
 
-	@Query("SELECT * FROM matches WHERE place_id = :placeId")
+	@Query("SELECT * FROM matches ORDER BY match_date desc")
+	Iterable<Match> getMatchesListInDescOrder();
+	
+	@Query("SELECT * FROM matches WHERE place_id = :placeId ORDER BY match_date desc")
 	List<Match> getMatchesListByPlace(@Param("placeId") Integer placeId);
 	
-	
-	@Query("SELECT * FROM matches WHERE user1_id = :userId OR user2_id = :userId")
+	@Query("SELECT * FROM matches WHERE user1_id = :userId OR user2_id = :userId ORDER BY match_date desc")
 	public List<Match> getMatchesListByUserId(@Param("userId")Integer userId);
 
 
