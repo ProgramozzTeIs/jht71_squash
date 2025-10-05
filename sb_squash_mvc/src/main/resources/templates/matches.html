@@ -2,51 +2,63 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>SQUASH - MATCHES</title>
+<title>SQUASH - MÉRKŐZÉSEK</title>
+
+<style>
+	table, th, td
+	{
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	  padding: 20px;
+	}
+</style>
+
 </head>
 <body>
 
-	<h1>MATCHES Page</h1>
+	<h1>MÉRKŐZÉSEK oldal</h1>
 	
-	<p>Select Player</p>
+	<p>Válassz játékost</p>
 	
 	<form action="/matches/filter/user" method= "get">
 	
-		<select name= "name">
+		<select name= "selectedUserId">
 		
-			<option th:each= " userDto : ${matchWrapperDto.getUsers()}" th:value= "${userDto.getName()}" th:text= "${userDto.getName()}"/>
+			<option th:each= " userDto : ${matchWrapperDto.getUsers()}" th:value= "${userDto.getId()}" th:text= "${userDto.getName()}"/>
 		
 		</select>
+		<input type="hidden" name="loggedinuserid" th:value="${matchWrapperDto.getLoggedInUserId()}" />
 		
 		<input type= "submit"/>
 		
 	</form>
 	
-	<p>Select Place</p>
+	<p>Válassz helyszínt</p>
 	
 	<form action="/matches/filter/place" method= "get">
 	
-		<select name= "place">
+		<select name= "selectedplaceid">
 			
-			<option th:each= "placeDto : ${matchWrapperDto.getPlaces}" th:value= "${placeDto.getName()}" th:text= "${placeDto.getName()}"/>
+			<option th:each= "placeDto : ${matchWrapperDto.getPlaces}" th:value= "${placeDto.getId()}" th:text= "${placeDto.getName()}"/>
 				
 		</select>
+		<input type="hidden" name="loggedinuserid" th:value="${matchWrapperDto.getLoggedInUserId()}" />
 		
 		<input type= "submit"/>
 		
 	</form>
 	
-	<p>Match list</p>
+	<p>Mérkőzés lista</p>
 	
 	<form action="/matches" method= "post">
 		<table>
 			<tr>
-				<th>Match Date</th>
-				<th>Place</th>
-				<th>Player 1</th>
-				<th>Player 1 point</th>
-				<th>Player 2</th>
-				<th>Player 2 point</th>
+				<th>Mérkőzés napja</th>
+				<th>Helyszín</th>
+				<th>Játékos 1</th>
+				<th>Játékos 1 pontjai</th>
+				<th>Játékos 2</th>
+				<th>Játékos 2 pontjai</th>
 			<tr/>
 			<tr th:each= "matchesDto :${matchWrapperDto.getMatches()}">
 				<td th:text= "${matchesDto.getMatchDate()}"></td>
@@ -77,16 +89,16 @@
 		
 		</table>
 		
-		<input type="hidden" name="userId" th:value="${matchWrappeDto.getLoggedInUserId()}">
+		<input type="hidden" name="userId" th:value="${matchWrapperDto.getLoggedInUserId()}">
 	</form>
 	
 	<div th:if="${errorDto != null}">
 		<h2 th:if="${errorDto.getCode() == 0}" style="color:Tomato;">Nem belépett felhasználó, próbáld újra</h2>
 	</div>
 	
-	
+	<br></br>
 	<form action="/logout" method="post">
-    	<input type="hidden" name="loggedInUserId" th:value="${userDto.id}" />
+    	<input type="hidden" name="loggedInUserId" th:value="${matchWrapperDto.getLoggedInUserId()}" />
     	<input type="submit" value="Kilépés" />
 	</form>
 	
