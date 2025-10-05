@@ -142,17 +142,17 @@ public class AppService {
 
 				for(Match match : matchList)
 				{
-					/** GET PLACE DATA FROM REPO BY ID */
+					/** PLACE ADATOK LEKÉRÉSE PLACEREPO-BÓL */
 					Optional<Place> placeOpt = placeRepository.findById(match.getPlaceId());
 					Place place = placeOpt.get();
-						/** CREATE PLACEDTO */
+						/** PLACEDTO LÉTREHOZÁSA */
 						PlaceDto placeDto = new PlaceDto(
 														place.getId(),
 														place.getName(),
 														place.getAddress(),
 														place.getRentFee());
 						
-					/** GET USER1 DATA FROM REPO BY ID */
+					/** USER1 ADATOK LEKÉRDEZÉSE USERREPO-BÓL ID ALAPJÁN */
 					Optional<User> user1Opt = userRepository.findById(match.getUser1Id());
 					User user1 = user1Opt.get();
 						/** CREATE USERDTO */
@@ -160,15 +160,15 @@ public class AppService {
 														user1.getId(),
 														user1.getName());
 					
-					/** GET USER2 DATA FROM REPO BY ID */
+					/** USER2 ADATOK LEKÉRDEZÉSE USERREPO-BÓL ID ALAPJÁN  */
 					Optional<User> user2Opt = userRepository.findById(match.getUser2Id());
 					User user2 = user2Opt.get();
-						/** CREATE USERDTO */
+						/** USERDTO LÉTREHOZÁSA */
 						UserDto user2Dto = new UserDto(
 														user2.getId(),
 														user2.getName());
 					
-					/** CREATE MATCHDTO */
+					/** MATCHDTO LÉTREHOZÁSA */
 					MatchDto matchDto = new MatchDto(
 													match.getDate(),
 													placeDto,
@@ -269,7 +269,7 @@ public class AppService {
 									getAllUserFromRepo(),
 									getAllPlaceFromRepo(),
 									adminId,
-									1 //saving was OK
+									1 //MENTÉS RENDBEN
 									);
 		}
 		else
@@ -278,7 +278,7 @@ public class AppService {
 									getAllUserFromRepo(),
 									getAllPlaceFromRepo(),
 									adminId,
-									2 //saving was not OK
+									2 //MENTÉS NEM SIKERÜLT
 									);
 		}
 		
@@ -373,7 +373,7 @@ public class AppService {
 	
 	
 	
-public UserDto getUserDto(String name) {
+	public UserDto getUserDto(String name) {
 		
 		UserDto userDto = null;
 		
