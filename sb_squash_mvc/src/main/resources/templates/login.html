@@ -2,18 +2,18 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>SQUASH - LOGIN</title>
+<title>SQUASH - BELÉPÉS</title>
 </head>
 <body>
 
-	<h1>LOGIN Page</h1>
+	<h1>BELÉPÉS oldal</h1>
 
 	<form action="/login" method="post">
 		
-		<label type="text">Name</label>
-		<input type="text" value="name" name="name"></input><br></br>
-		<label type="text">Password</label>
-		<input type="password" value="password" name="password"></input><br></br>
+		<label type="text">Név</label>
+		<input type="text" value="név" name="name"></input><br></br>
+		<label type="text">Jelszó</label>
+		<input type="password" value="jelszó" name="password"></input><br></br>
 			
 		<input type="submit" value="Login"></input>
 	</form>
@@ -21,6 +21,7 @@
 	<div th:if="${errorDto != null}">
 		<h2 th:if="${errorDto.getCode() == 0}" style="color:Tomato;">Hibás adatokat adtál meg. Próbáld újra</h2>
 		<h2 th:if="${errorDto.getCode() == 1}" style="color:Tomato;">Nem belépett vagy nem admin felhasználó</h2>
+		<h2 th:if="${errorDto.getCode() == 2}" style="color:Tomato;">Sikeres kilépés</h2>
 	</div>
 
 </body>
