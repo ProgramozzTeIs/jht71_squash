@@ -18,7 +18,7 @@ public interface UserRepository extends CrudRepository<User, Integer>{
 	
 	@Modifying
 	@Query ("UPDATE users SET logged_in = :i WHERE name = :userName AND password= :userPwd")
-	Optional<User> userLoggedIn(@Param("i")int i, @Param("userName") String userName, @Param("userPwd") String userPwd);
+	Integer userLoggedIn(@Param("i")int i, @Param("userName") String userName, @Param("userPwd") String userPwd);
 
 
 }

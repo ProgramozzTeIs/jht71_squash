@@ -63,7 +63,7 @@ public class AppController {
 			MatchWrapperDto matchWrapperDto = service.loginPlayer(name,password);
 			
 			model.addAttribute("matchWrapperDto", matchWrapperDto);
-			resultHtml = "/matches.html";
+			resultHtml = "matches.html";
 
 		}
 		else if(loginResult == 3)

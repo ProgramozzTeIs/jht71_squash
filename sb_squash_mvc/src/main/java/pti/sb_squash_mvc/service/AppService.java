@@ -306,9 +306,11 @@ public class AppService {
 		
 		MatchWrapperDto matchWrapperDto = null;
 		
-		Optional <User> userOpt = userRepository.userLoggedIn(1, name, password);
-		User user = userOpt.get();
+		Integer userId = userRepository.userLoggedIn(1, name, password);
+		Optional<User> userOpt = this.userRepository.findById(userId);
 		
+		User user = userOpt.get();
+
 		List<MatchDto> matchDtoList = new ArrayList<>();
 				
 		Iterable<Match> matchList = matchRepository.findAll();
