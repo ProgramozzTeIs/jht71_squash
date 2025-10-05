@@ -14,7 +14,7 @@
 	
 		<select name= "name">
 		
-			<option th:each= " user : ${matchWrapperDto}" th:value= "${userDto.getName()}" th:text= "${userDto.getName()}"/>
+			<option th:each= " userDto : ${matchWrapperDto.getUsers()}" th:value= "${userDto.getName()}" th:text= "${userDto.getName()}"/>
 		
 		</select>
 		
@@ -28,7 +28,7 @@
 	
 		<select name= "place">
 			
-			<option th:each= "place : ${matchWrapperDto}" th:value= "${placeDto.getName()}" th:text= "${placeDto.getName()}"/>
+			<option th:each= "placeDto : ${matchWrapperDto.getPlaces}" th:value= "${placeDto.getName()}" th:text= "${placeDto.getName()}"/>
 				
 		</select>
 		
@@ -48,31 +48,31 @@
 				<th>Player 2</th>
 				<th>Player 2 point</th>
 			<tr/>
-			<tr th:each= "matches :${matchWrapperDto}">
-				<td th:text= "${matchDto.getMatchDate()}"></td>
+			<tr th:each= "matchesDto :${matchWrapperDto.getMatches()}">
+				<td th:text= "${matchesDto.getMatchDate()}"></td>
 				<td>
 					<table>
-					<tr th:each= "placeDto : ${matchDto}">
+					<tr th:each= "placeDto : ${matchesDto.getPlaceDto()}">
 						<td th:text= "${placeDto.getName()}"></td>
 					</tr>
 					</table>
 				</td>
 				<td>
 					<table>
-					<tr th:each= "user1Dto : ${matchDto}">
-						<td th:text= "${userDto.getName()}"></td>
+					<tr th:each= "user1Dto : ${matchesDto.getUser1Dto()}">
+						<td th:text= "${user1Dto.getName()}"></td>
 					</tr>
 					</table>
 				</td>
-				<td th:text= "${matchDto.getUser1Point()}"></td>
+				<td th:text= "${matchesDto.getUser1Point()}"></td>
 				<td>
 					<table>
-					<tr th:each= "user2Dto : ${matchDto}">
-						<td th:text= "${userDto.getName()}"></td>
+					<tr th:each= "user2Dto : ${matchesDto.getUser2Dto()}">
+						<td th:text= "${user2Dto.getName()}"></td>
 					</tr>
 					</table>
 				</td>
-				<td th:text= "${matchDto.getUser2Point()}"></td>
+				<td th:text= "${matchesDto.getUser2Point()}"></td>
 			</tr>
 		
 		</table>

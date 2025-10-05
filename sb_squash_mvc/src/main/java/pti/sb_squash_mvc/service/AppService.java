@@ -235,21 +235,48 @@ public class AppService {
 	}
 
 
-	public int saveNewMatch(int placeId, int user1Id, int user1Points, int user2Id, int user2Points,
-			LocalDate date) {
+	public AdminDto saveNewMatch(int adminId, int placeId, int user1Id, int user1Points, int user2Id, int user2Points,LocalDate date) {
 		
-		int result = 0;
-	
-		return result;
-	}
+		Match savedMatch = null;
+		AdminDto adminDto = null;
+		int code = 0; //sikeres mentés
+		
+		Match match = new Match(
+				placeId,
+				user1Id,
+				user1Points,
+				user2Id,
+				user2Points,
+				date);
+		
+		if(user1Id != user2Id) {
+			savedMatch = this.matchRepository.save(match);
+		}
+		
+		if(savedMatch == null) {
+			code = 2;  //nem sikeres mentés
+		}
+		
+		else if(user1Id == user2Id)
+		{
+			code = 3; //ugyanaz a játékos 
+		}
+		
+		else {
+			code = 1; //sikeres mentés
+		}
+		
+		
+			adminDto = new AdminDto(
+					getAllUserFromRepo(),
+					getAllPlaceFromRepo(),
+					adminId,
+					code
+					);
+		
 
-	public AdminDto getAdminDto(int code ,int adminId) {
-		
-		AdminDto result = null;
-		
-		return result;
+		return adminDto;
 	}
-
 
 	public AdminDto savePlaceInRepo(int adminId, String name, String address, int rentFeeHuf) {
 		

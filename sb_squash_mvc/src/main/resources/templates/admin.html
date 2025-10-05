@@ -78,6 +78,14 @@
 			<input type="submit" value="Create match"></input>
 				
 		</form>
+		
+		<div th:if="${adminDto != null}">
+			<h2 th:if="${adminDto.getCode()==1}" style="color:MediumSeaGreen;">Match has been saved to repo</h2>
+			<h2 th:if="${adminDto.getCode()==2}" style="color:Tomato;">Match has NOT been saved to repo</h2>
+			<h2 th:if="${adminDto.getCode()==3}" style="color:MediumSeaGreen;">Same player !!</h2>
+		
+		</div>
+	
 	
 	</body>
 </html>

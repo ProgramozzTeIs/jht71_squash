@@ -14,9 +14,8 @@ public class Match {
 		super();
 	}
 
-	public Match(int id, int placeId, int user1Id, int user1Points, int user2Id, int user2Points, LocalDate date) {
+	public Match( int placeId, int user1Id, int user1Points, int user2Id, int user2Points, LocalDate date) {
 		super();
-		this.id = id;
 		this.placeId = placeId;
 		this.user1Id = user1Id;
 		this.user1Points = user1Points;
@@ -24,6 +23,10 @@ public class Match {
 		this.user2Points = user2Points;
 		this.date = date;
 	}
+	
+	
+	
+	
 
 	@Id
 	@Column(value="id")

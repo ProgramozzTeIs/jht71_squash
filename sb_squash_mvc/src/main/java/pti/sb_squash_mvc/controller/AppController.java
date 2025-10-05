@@ -86,6 +86,9 @@ public class AppController {
 			return resultHtml;
 		}	
 
+		
+		
+		
 	@GetMapping("/matches/filter/user")
 	public String filterMatchesByUser(
 			Model model,
@@ -151,28 +154,29 @@ public class AppController {
 			@RequestParam("adminId") int adminId
 			){
 		
-		
+	
 		String resultHtml = "admin.html";
 		
 		if(loginValidator.isUserLoggedIn(adminId) == Roles.ADMIN) {
-			
-			resultHtml = "admin.html";
-			
-			 int code = service.saveNewMatch(
-					 placeId,
-					 user1Id,
-					 user1Points,
-					 user2Id,
-					 user2Points,
-					 date);
 			 
-			 AdminDto adminDto = service.getAdminDto(code ,adminId);
-			 model.addAttribute("adminDto" ,adminDto);
-			 
-		}
-			
+			AdminDto adminDto = service.saveNewMatch(
+						 adminId,
+						 placeId,
+						 user1Id,
+						 user1Points,
+						 user2Id,
+						 user2Points,
+						 date);
+
+			model.addAttribute("adminDto" ,adminDto);
+				
+			}
+
 		else{
 			
+			ErrorDto errorDto = new ErrorDto(1);	
+			model.addAttribute("errorDto", errorDto);
+		
 			resultHtml = "login.html";
 			
 			 }
