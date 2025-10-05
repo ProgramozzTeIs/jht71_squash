@@ -6,28 +6,28 @@
 </head>
 	<body>
 		
-		<h1>ADMIN Page</h1>
+		<h1>ADMIN oldal</h1>
 		
 		
-		<h2>Create a new place</h2>
+		<h2>Új helyszín létrehozása</h2>
 		
 		<form action="/admin/save/place" method="post">
 		
-			<label type="text">Place name</label>
-			<input type="text" value="placename" name="placename"></input><br></br>
-			<label type="text">Address of place</label>
- 			<input type="text" value="address" name="address"></input><br></br>
- 			<label type="text">Rent fee in HUF</label>
+			<label type="text">Helyszín neve</label>
+			<input type="text" value="helyszín neve" name="placename"></input><br></br>
+			<label type="text">Helyszín címe</label>
+ 			<input type="text" value="Helyszín címe" name="address"></input><br></br>
+ 			<label type="text">Bérleti díj HUF-ban</label>
  			<input type="number" value="0" name="rentfeehuf"></input><br></br>
  			<!-- Send admin id -->
  			<input type="hidden" th:value="${adminDto.getLoggedInAdminId()}" name="adminId"></input>
-			<input type="submit" value="Create place"></input>
+			<input type="submit" value="Helyszín mentése"></input>
 		
 		
 		<!-- Repo save succeeded text -->
 		<div th:if="${adminDto != null}">
-			<h2 th:if="${adminDto.getCode()==1}" style="color:MediumSeaGreen;">Place has been saved to repo</h2>
-			<h2 th:if="${adminDto.getCode()==2}" style="color:Tomato;">Place has NOT been saved to repo</h2>
+			<h2 th:if="${adminDto.getCode()==1}" style="color:MediumSeaGreen;">A helyszín sikeresen mentésre került</h2>
+			<h2 th:if="${adminDto.getCode()==2}" style="color:Tomato;">A hely mentése sikertelen</h2>
 		</div>
 		<!-- Error text -->
 		
@@ -35,54 +35,54 @@
 		
 		<br></br>
 		
-		<h2>Save new match</h2>
+		<h2>Új mérkőzés létrehozása</h2>
 		
 		<form action ="/admin/save/match" method ="post">
 			
-			<h3>Place name </h3>
+			<h3>Helyszín neve </h3>
 			
 			<select name ="placeId" > 		
 				<option th:each="place : ${adminDto.getPlaces()}"
 						th:value="${place.getId()}"
 						th:text="${place.getName()}"/>
 			</select>
-			<h3>First player name </h3>
+			<h3>Játékos 1 neve</h3>
 			
 			<select name="user1Id"> 		
 				<option th:each="user1 : ${adminDto.getUsers()}"
 						th:value="${user1.getId()}"
 						th:text="${user1.getName()}">
 			</select>
-			<h3>First player points </h3>
+			<h3>Játékos 1 pontjai </h3>
 				
 				<input type="number" name="user1Points">
 							
-			<h3>Second player name </h3>
+			<h3>Játékos 2 neve </h3>
 			
 			<select name="user2Id">			
 				<option th:each="user2 : ${adminDto.getUsers()}"
 						th:value="${user2.getId()}"
 						th:text="${user2.getName()}">
 			</select>
-			<h3>Second player points </h3>
+			<h3>Játékos 2 pontjai </h3>
 				
 				<input type="number" name="user2Points">
 							
-			<h4> Date </h4>
+			<h4> Dátum </h4>
 				
 				<input type="date" name="date">
 				
 				<!-- Send admin id -->
 				<input type="hidden" name="adminId" th:value="${adminDto.getLoggedInAdminId()}">
 			<br></br>
-			<input type="submit" value="Create match"></input>
+			<input type="submit" value="Mérkőzés mentése"></input>
 				
 		</form>
 
 		<div th:if="${adminDto != null}">
-			<h2 th:if="${adminDto.getCode()==1}" style="color:MediumSeaGreen;">Match has been saved to repo</h2>
-			<h2 th:if="${adminDto.getCode()==2}" style="color:Tomato;">Match has NOT been saved to repo</h2>
-			<h2 th:if="${adminDto.getCode()==3}" style="color:MediumSeaGreen;">Same player !!</h2>
+			<h2 th:if="${adminDto.getCode()==3}" style="color:MediumSeaGreen;">Mérkőzés mentése sikeresen megtörtént</h2>
+			<h2 th:if="${adminDto.getCode()==4}" style="color:Tomato;">Mérkőzés mentése nem sikerült</h2>
+			<h2 th:if="${adminDto.getCode()==5}" style="color:Tomato;">Azonos játékost választottál !!</h2>
 		
 		</div>
 	
@@ -103,8 +103,8 @@
 		    <input type="submit" value="Mentés">
 		    		    
 		    <div th:if="${adminDto != null and adminDto.getCode() != null}">
-		        <p th:if="${adminDto.getCode() == 1}">Sikeres mentés</p>
-		        <p th:if="${adminDto.getCode() == 2}">Ilyen nevű játékos már van</p>
+		        <p th:if="${adminDto.getCode() == 6}">Sikeres mentés</p>
+		        <p th:if="${adminDto.getCode() == 7}">Ilyen nevű játékos már van</p>
 		    </div>
 		    
 		    <div th:if="${errorDto != null}">
