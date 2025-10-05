@@ -31,18 +31,18 @@ public class LoginValidator {
 		Roles result = Roles.UNKNOWN;
 		User user = null;
 		
-		/** GET USER'S DATA FROM REPO */
+		/** ADATOK LEKÉRDEZÉSE USERREPO-BÓL */
 		Optional<User> userOpt = userRepository.findById(userId);
 		
 		if(userOpt.isEmpty() == false)
 		{
 			user = userOpt.get();
-			/** IF USER IS LOGGED IN, RETURN THE ROLE (ADMIN, PLAYER)*/
+			/** HA A USER BE VAN JELENTKEZVE, AKKOR A ROLE-JÁT ADJA VISSZA (ADMIN, PLAYER)*/
 			if(user.isLoggedIn() == true)
 			{
 				result = user.getRole();
 			}
-			/** IF NOT LOGGED IN, RETURN UNKNOWN WHICH IS THE DEFAULT VALUE OF RESULT */
+			/** HA A USER NINCS JELENTKEZVE, AKKOR A UNKNOWN ÉRTÉKET AD VISSZA (EZ AZ ALAPÉRTÉKE A RESULT VÁLTOZÓNAK) */
 		}
 			
 		return result;
