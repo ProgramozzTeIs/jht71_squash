@@ -83,5 +83,18 @@
 	<div th:if="${errorDto != null}">
 		<h2 th:if="${errorDto.getCode() == 0}" style="color:Tomato;">Nem belépett felhasználó, próbáld újra</h2>
 	</div>
+	
+	
+	<form action="/logout" method="post">
+    	<input type="hidden" name="loggedInUserId" th:value="${userDto.id}" />
+    	<input type="submit" value="Kilépés" />
+	</form>
+	
+	<div th:if="${errorDto != null}">
+    	<p th:if="${errorDto.code == 1}">Nem belépett felhasználó.</p>
+    	<p th:if="${errorDto.code == 2}">Sikeres kilépés.</p>
+	</div>
+	
+	
 </body>
 </html>

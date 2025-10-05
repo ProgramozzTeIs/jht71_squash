@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import pti.sb_squash_mvc.db.MatchRepository;
 import pti.sb_squash_mvc.db.PlaceRepository;
 import pti.sb_squash_mvc.db.UserRepository;
 import pti.sb_squash_mvc.dto.AdminDto;
+import pti.sb_squash_mvc.dto.ErrorDto;
 import pti.sb_squash_mvc.dto.MatchDto;
 import pti.sb_squash_mvc.dto.MatchWrapperDto;
 import pti.sb_squash_mvc.dto.PlaceDto;
@@ -411,6 +413,75 @@ public class AppService {
 		return userDto;
 	}
 
-	
-	
+
+
+	public AdminDto saveUser(int adminId, String userName) {
+
+		AdminDto adminDto = null;
+		
+		Roles role = loginValidator.isUserLoggedIn(adminId);
+		
+		if(role.equals(Roles.ADMIN)) {
+		
+			User existing = userRepository.getUserByName(userName);
+		    	
+			if (existing != null) {
+				adminDto = loadAdminPage(adminId);
+			    adminDto.setCode(2);			 
+		    }
+		    	
+			else {
+		    	String generatedPassword = generatePassword();
+		    		
+		    	User user = new User();
+				user.setName(userName);
+				user.setPassword(generatedPassword);
+				user.setFirstLogin(true);
+				user.setLoggedIn(false);
+				user.setRole(Roles.PLAYER);
+				userRepository.save(user);
+			
+				adminDto = loadAdminPage(adminId);
+				adminDto.setCode(1);
+		    }
+		}	
+		return adminDto;
+	}
+
+
+
+	private String generatePassword() {
+		
+		Random random = new Random();	
+		int randomNumb = random.nextInt(9000) + 1000;
+				
+		String randomPwd = "user" + randomNumb;
+		
+		return randomPwd;
+	}
+
+
+
+	public ErrorDto logoutUser(int loggedInUserId) {
+
+		ErrorDto errorDto = null;
+		
+		Optional<User> userOpt = userRepository.findById(loggedInUserId);
+
+		if (userOpt.isPresent()) {
+		       
+			User user = userOpt.get();
+		       
+		    if (user.isLoggedIn()) {
+		    	user.setLoggedIn(false);
+		        userRepository.save(user);
+		        errorDto = new ErrorDto(2);
+		    }
+		}
+
+	    errorDto = new ErrorDto(1); 
+		
+		return errorDto;
+	}
+
 }

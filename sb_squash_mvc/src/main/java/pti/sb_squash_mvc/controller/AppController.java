@@ -268,9 +268,42 @@ public class AppController {
 			
 			return nextPage;
 		}
+		
+		
+		
+		@PostMapping("/admin/save/user")
+		public String saveUser(
+		        Model model,
+		        @RequestParam("adminId") int adminId,
+		        @RequestParam("userName") String userName) {
+			
+			AdminDto adminDto = this.service.saveUser(adminId, userName);
+			
+			if(adminDto == null) {
+				
+				ErrorDto errorDto = new ErrorDto(1);
+			    model.addAttribute("errorDto", errorDto);
+			    return "login.html";
+			}
+			
+			model.addAttribute("adminDto", adminDto);
+			
+		    return "admin.html"; 
+		}
+		
+		
 
-	
-	
-	
+		@PostMapping("/logout")
+		public String logout(
+		        Model model,
+		        @RequestParam("loggedInUserId") int loggedInUserId) {
+
+		    ErrorDto errorDto = this.service.logoutUser(loggedInUserId);
+
+		    model.addAttribute("errorDto", errorDto);
+
+		    return "login.html";
+		}
+
 	
 }
