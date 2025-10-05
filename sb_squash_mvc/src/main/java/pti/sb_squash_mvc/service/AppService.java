@@ -363,7 +363,7 @@ public class AppService {
 					matchDtoList,
 					getAllUserFromRepo(),
 					getAllPlaceFromRepo(),
-					1
+					user.getId()
 					);
 		
 				
