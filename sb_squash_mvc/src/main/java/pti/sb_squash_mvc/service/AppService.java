@@ -62,7 +62,7 @@ public class AppService {
 		
 		if(user != null && user.getPassword().equals(password)) {
 			
-			if(user.isFirstLogin()) {
+			if(user.isFirstLogin() && user.getRole() != Roles.ADMIN) {
 				loginResult = 1;
 			}		
 			else {		
@@ -115,7 +115,7 @@ public class AppService {
 			//3
 			else if(selectedPlaceId == null && selectedUserId == null)
 			{
-				Iterable<Match> matchIterable = matchRepository.findAll();
+				Iterable<Match> matchIterable = matchRepository.getMatchesListInDescOrder();
 				for(Match match : matchIterable) {
 					matchList.add(match);
 				}		
@@ -255,17 +255,17 @@ public class AppService {
 			savedMatch = this.matchRepository.save(match);
 		}
 		
-		if(savedMatch == null) {
-			code = 2;  //nem sikeres mentés
+		if(user1Id == user2Id) {
+			code = 5;  //nem sikeres mentés
 		}
 		
-		else if(user1Id == user2Id)
+		else if(savedMatch == null)
 		{
-			code = 3; //ugyanaz a játékos 
+			code = 4; //ugyanaz a játékos 
 		}
 		
 		else {
-			code = 1; //sikeres mentés
+			code = 3; //sikeres mentés
 		}
 		
 		
@@ -341,7 +341,7 @@ public class AppService {
 
 		List<MatchDto> matchDtoList = new ArrayList<>();
 				
-		Iterable<Match> matchList = matchRepository.findAll();
+		Iterable<Match> matchList = matchRepository.getMatchesListInDescOrder();
 		
 		for (Match match : matchList) {
 			
@@ -453,7 +453,7 @@ public class AppService {
 		    	
 			if (existing != null) {
 				adminDto = loadAdminPage(adminId);
-			    adminDto.setCode(2);			 
+			    adminDto.setCode(7);			 
 		    }
 		    	
 			else {
@@ -468,7 +468,7 @@ public class AppService {
 				userRepository.save(user);
 			
 				adminDto = loadAdminPage(adminId);
-				adminDto.setCode(1);
+				adminDto.setCode(6);
 		    }
 		}	
 		return adminDto;
