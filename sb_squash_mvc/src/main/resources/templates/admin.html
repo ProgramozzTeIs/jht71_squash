@@ -78,7 +78,7 @@
 			<input type="submit" value="Create match"></input>
 				
 		</form>
-		
+
 		<div th:if="${adminDto != null}">
 			<h2 th:if="${adminDto.getCode()==1}" style="color:MediumSeaGreen;">Match has been saved to repo</h2>
 			<h2 th:if="${adminDto.getCode()==2}" style="color:Tomato;">Match has NOT been saved to repo</h2>
@@ -87,5 +87,32 @@
 		</div>
 	
 	
+
+		
+		<br></br>
+		
+		<h2>Játékos mentése</h2>
+		
+		<form action="/admin/save/user" method="post">
+    
+		    <label>Új játékos neve:</label>
+		    <input type="text" name="userName" required><br><br>
+		    
+		    <input type="hidden" name="adminId" th:value="${adminDto.getLoggedInAdminId()}">
+		    
+		    <input type="submit" value="Mentés">
+		    		    
+		    <div th:if="${adminDto != null and adminDto.getCode() != null}">
+		        <p th:if="${adminDto.getCode() == 1}">Sikeres mentés</p>
+		        <p th:if="${adminDto.getCode() == 2}">Ilyen nevű játékos már van</p>
+		    </div>
+		    
+		    <div th:if="${errorDto != null}">
+    			<p th:if="${errorDto.code == 1}">Nem belépett felhasználó.</p>
+			</div>
+		    
+		    
+		</form>
+
 	</body>
 </html>
