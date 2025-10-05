@@ -490,26 +490,27 @@ public class AppService {
 
 	public ErrorDto logoutUser(int loggedInUserId) {
 
-		ErrorDto errorDto = null;
+		ErrorDto errorDto = new ErrorDto(0);
 		
 		Optional<User> userOpt = userRepository.findById(loggedInUserId);
 
-		if (userOpt.isPresent()) {
+		if (userOpt.isEmpty() == false) {
 		       
 			User user = userOpt.get();
 			
 		    if (user.isLoggedIn()) {
 		    	user.setLoggedIn(false);
 		        userRepository.save(user);
-		        errorDto = new ErrorDto(2);
+		        errorDto.setCode(2);
 		    }
 		    else
 		    {
-			    errorDto = new ErrorDto(1); 
+			    errorDto.setCode(1); 
 		    }
 		}
 
 		return errorDto;
 	}
+
 
 }
