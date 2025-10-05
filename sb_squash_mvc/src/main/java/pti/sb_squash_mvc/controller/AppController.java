@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pti.sb_squash_mvc.dto.AdminDto;
 import pti.sb_squash_mvc.dto.ErrorDto;
 import pti.sb_squash_mvc.dto.MatchWrapperDto;
+import pti.sb_squash_mvc.dto.UserDto;
 import pti.sb_squash_mvc.service.AppService;
 import pti.sb_squash_mvc.util.LoginValidator;
 import pti.sb_squash_mvc.util.Roles;
@@ -54,10 +55,16 @@ public class AppController {
 			model.addAttribute("errorDto", errorDto);
 			resultHtml = "login.html";
 		}
+		
 		else if(loginResult == 1)
 		{
-			/** Andi changepwd.html*/
+			UserDto userDto = service.getUserDto(name);	
+			model.addAttribute("userDto", userDto);
+			
+			resultHtml = "changepwd.html";
+
 		}
+		
 		else if(loginResult == 2)
 		{
 			MatchWrapperDto matchWrapperDto = service.loginPlayer(name,password);
@@ -209,6 +216,30 @@ public class AppController {
 
 		
 		return resultHtml;
+	}
+
+	
+	
+	@PostMapping("/changepwd")
+	public String changePassword(
+				Model model,
+				@RequestParam("userId") int userId,
+				@RequestParam("newPassword") String newPassword,
+				@RequestParam("confirmPassword") String confirmPassword){
+			
+		String nextPage = "";
+		
+		UserDto userDto = service.changePassword(userId, newPassword, confirmPassword);
+		model.addAttribute("userDto", userDto);
+					
+		if(userDto == null) {		
+			nextPage = "changepwd.html";
+		}
+		else {
+			nextPage = "redirect:/matches";
+		}
+		
+		return nextPage;
 	}
 
 }

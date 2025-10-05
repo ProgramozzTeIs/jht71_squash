@@ -7,6 +7,34 @@
 <body>
 
 	<h1>CHANGEPWD Page</h1>
+	
+	<div th:if="${userDto != null}">
+		
+		<p>Első belépés</p>
+		<p>Változtass jelszót!</p>
+	
+		<form action="/changepwd" method="post">
+		
+			<input type="hidden" name="userId" th:value="${userDto.getId()}"/>
+			<p th:text="'Felhasználó: ' + ${userDto.getName()}"></p>
+			
+			<label type="text">Új jelszó</label>
+			<input type="password" name="newPassword" required/><br></br>
+			
+			<label>Jelszó megerősítése</label>
+			<input type="password" name="confirmPassword" required /><br></br>
+			
+			<input type="submit" value="Mentés">		
+	
+		</form>
+	</div>
+	
+	
+	<div th:if="${userDto == null}">
+		<p>A két jelszó nem egyezik! Próbáld újra!</p>
+		<button onclick="history.back()">Vissza az űrlapra</button>
+	</div>
+	
 
 </body>
 </html>
