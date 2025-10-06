@@ -439,14 +439,21 @@ public class AppService {
 
 
 	private String generatePassword() {
+
+		String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		
-		Random random = new Random();	
-		int randomNumb = random.nextInt(9000) + 1000;
-				
-		String randomPwd = "user" + randomNumb;
+		Random random = new Random();
+		String randomPwd = "";
 		
+		for(int index = 0; index < 8; index++) {
+			
+			int charIndex = random.nextInt(chars.length());
+			randomPwd += chars.charAt(charIndex);
+					
+		}	
 		return randomPwd;
 	}
+
 
 
 
