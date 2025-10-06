@@ -283,19 +283,25 @@ public class AppController {
 		        @RequestParam("adminId") int adminId,
 		        @RequestParam("userName") String userName) {
 			
-			AdminDto adminDto = this.service.saveUser(adminId, userName);
 			
+			String resultHtml = "";
+			
+			AdminDto adminDto = this.service.saveUser(adminId, userName);
+					
 			if(adminDto == null) {
 				
 				ErrorDto errorDto = new ErrorDto(1);
-			    model.addAttribute("errorDto", errorDto);
-			    return "login.html";
+			    model.addAttribute("errorDto", errorDto);			    
+			    resultHtml = "login.html";
+			}
+			else {
+				model.addAttribute("adminDto", adminDto);
+				resultHtml = "admin.html";
 			}
 			
-			model.addAttribute("adminDto", adminDto);
-			
-		    return "admin.html"; 
+		    return resultHtml; 
 		}
+
 		
 		
 
