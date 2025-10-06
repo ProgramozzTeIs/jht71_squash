@@ -76,8 +76,9 @@ public class AppController {
 			}
 			else if(loginResult == 3)
 			{			
-				int adminId = this.service.getUserId(name, password);
-				AdminDto adminDto = this.service.loadAdminPage(adminId);
+				/**a loadAdminPage metódus annyi helyen van használatban adminId bemeneti paraméterrel, 
+				 * hogy inkább csináltam egy új metódust, ami name-el hívható */
+				AdminDto adminDto = this.service.loadAdminPageAfterLogin(name);
 			
 				model.addAttribute("adminDto", adminDto);
 				resultHtml = "admin.html";

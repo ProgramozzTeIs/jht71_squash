@@ -328,6 +328,23 @@ public class AppService {
 		
 		return adminDto;
 	}
+	
+	
+	public AdminDto loadAdminPageAfterLogin(String name) {
+		
+		AdminDto adminDto = null;
+		
+		User user = this.userRepository.getUserByName(name);
+		
+		adminDto = new AdminDto(
+								getAllUserFromRepo(),
+								getAllPlaceFromRepo(),
+								user.getId(),
+								0
+								);
+		
+		return adminDto;
+	}
 
 
 
