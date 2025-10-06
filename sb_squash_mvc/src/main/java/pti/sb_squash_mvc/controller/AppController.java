@@ -68,7 +68,7 @@ public class AppController {
 			else if(loginResult == 2)
 
 			{
-				MatchWrapperDto matchWrapperDto = service.loginPlayer(name,password);
+				MatchWrapperDto matchWrapperDto = service.getMatchList(name,password);
 				
 				model.addAttribute("matchWrapperDto", matchWrapperDto);
 				resultHtml = "matches.html";
