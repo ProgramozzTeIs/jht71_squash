@@ -10,12 +10,14 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import pti.sb_squash_mvc.db.MatchRepository;
 import pti.sb_squash_mvc.db.PlaceRepository;
 import pti.sb_squash_mvc.db.UserRepository;
 import pti.sb_squash_mvc.dto.AdminDto;
 import pti.sb_squash_mvc.dto.ErrorDto;
+import pti.sb_squash_mvc.dto.ExchangeRateDto;
 import pti.sb_squash_mvc.dto.MatchDto;
 import pti.sb_squash_mvc.dto.MatchWrapperDto;
 import pti.sb_squash_mvc.dto.PlaceDto;
@@ -147,12 +149,9 @@ public class AppService {
 					/** PLACE ADATOK LEKÉRÉSE PLACEREPO-BÓL */
 					Optional<Place> placeOpt = placeRepository.findById(match.getPlaceId());
 					Place place = placeOpt.get();
-						/** PLACEDTO LÉTREHOZÁSA */
-						PlaceDto placeDto = new PlaceDto(
-														place.getId(),
-														place.getName(),
-														place.getAddress(),
-														place.getRentFee());
+						
+					/** PLACEDTO LÉTREHOZÁSA */
+					PlaceDto placeDto = getPlaceDto(match.getPlaceId());
 						
 					/** USER1 ADATOK LEKÉRDEZÉSE USERREPO-BÓL ID ALAPJÁN */
 					Optional<User> user1Opt = userRepository.findById(match.getUser1Id());
@@ -224,11 +223,7 @@ public class AppService {
 		
 		for(Place place : placeList)
 		{
-			PlaceDto placeDto = new PlaceDto(
-											place.getId(),
-											place.getName(),
-											place.getAddress(),
-											place.getRentFee());
+			PlaceDto placeDto = getPlaceDto(place.getId());
 			
 			placeDtoList.add(placeDto);
 		}
@@ -479,6 +474,48 @@ public class AppService {
 		}
 
 		return errorDto;
+	}
+	
+	
+	private double getEurRate() {
+        
+		double eurRate = 0;
+		
+		RestClient restClient = RestClient.create();
+
+        ExchangeRateDto eurRateDto = restClient.get()
+            .uri("http://localhost:8081/eur")
+            .retrieve()
+            .body(ExchangeRateDto.class);
+        
+        eurRate = eurRateDto.getRate();
+
+        return eurRate;
+    }
+
+	
+	
+	
+	
+	private PlaceDto getPlaceDto(int placeId) {
+	    
+		PlaceDto placeDto = null;
+		
+		Optional<Place> optPlace = placeRepository.findById(placeId);
+				
+		if(optPlace.isEmpty() == false) {
+			
+			Place place = optPlace.get();
+		
+	        placeDto =  new PlaceDto(
+		        place.getId(),
+		        place.getName(),
+		        place.getAddress(),
+		        place.getRentFee(),
+		        place.getRentFee() / getEurRate());		
+		}
+	    
+	    return placeDto;
 	}
 
 

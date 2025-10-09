@@ -52,42 +52,30 @@
 	
 	<form action="/matches" method= "post">
 		<table>
-			<tr>
-				<th>Mérkőzés napja</th>
-				<th>Helyszín</th>
-				<th>Játékos 1</th>
-				<th>Játékos 1 pontjai</th>
-				<th>Játékos 2</th>
-				<th>Játékos 2 pontjai</th>
-			<tr/>
-			<tr th:each= "matchesDto :${matchWrapperDto.getMatches()}">
-				<td th:text= "${matchesDto.getMatchDate()}"></td>
-				<td>
-					<table>
-					<tr th:each= "placeDto : ${matchesDto.getPlaceDto()}">
-						<td th:text= "${placeDto.getName()}"></td>
-					</tr>
-					</table>
-				</td>
-				<td>
-					<table>
-					<tr th:each= "user1Dto : ${matchesDto.getUser1Dto()}">
-						<td th:text= "${user1Dto.getName()}"></td>
-					</tr>
-					</table>
-				</td>
-				<td th:text= "${matchesDto.getUser1Point()}"></td>
-				<td>
-					<table>
-					<tr th:each= "user2Dto : ${matchesDto.getUser2Dto()}">
-						<td th:text= "${user2Dto.getName()}"></td>
-					</tr>
-					</table>
-				</td>
-				<td th:text= "${matchesDto.getUser2Point()}"></td>
-			</tr>
-		
-		</table>
+		  <tr>
+		    <th>Mérkőzés napja</th>
+		    <th>Helyszín neve</th>
+		    <th>Helyszín címe</th>
+		    <th>Bérleti díj / óra (HUF)</th>
+		    <th>Bérleti díj / óra (EUR)</th>
+		    <th>Játékos 1</th>
+		    <th>Játékos 1 pontjai</th>
+		    <th>Játékos 2</th>
+		    <th>Játékos 2 pontjai</th>
+		  </tr>
+		  
+		  <tr th:each="matchesDto : ${matchWrapperDto.getMatches()}">
+		    <td th:text="${matchesDto.getMatchDate()}"></td>
+		    <td th:text="${matchesDto.getPlaceDto().name}"></td>
+		    <td th:text="${matchesDto.getPlaceDto().address}"></td>
+		    <td th:text="${matchesDto.getPlaceDto().rentFeeHuf}"></td>
+		    <td th:text="${matchesDto.getPlaceDto().rentFeeEur}"></td>
+		    <td th:text="${matchesDto.getUser1Dto().name}"></td>
+		    <td th:text="${matchesDto.getUser1Point()}"></td>
+		    <td th:text="${matchesDto.getUser2Dto().name}"></td>
+		    <td th:text="${matchesDto.getUser2Point()}"></td>
+		  </tr>
+		</table>	
 		
 		<input type="hidden" name="userId" th:value="${matchWrapperDto.getLoggedInUserId()}">
 	</form>
